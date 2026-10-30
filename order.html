@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pesanan | My Bloody Vinyl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=Inter:wght@400..700&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="in-frame" data-page="order.html">
+<main class="page-body">
+<div id="o"></div>
+</main>
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script>
+(function () {
+    var o = MBV.store.get('mbv-order'), el = document.getElementById('o');
+    if (!o) { el.innerHTML = '<div class="empty"><p>Belum ada pesanan.</p><a class="btn-vintage" href="catalog.html">Lihat katalog</a></div>'; return; }
+    var how = { transfer: 'Transfer ke BCA 000-000-0000 a.n. My Bloody Vinyl (nomor contoh, ganti dengan rekening asli).', qris: 'Kode QRIS akan dikirim ke WhatsApp ' + MBV.esc(o.phone) + '.', cod: 'Siapkan uang pas saat kurir tiba.' };
+    el.innerHTML = '<div class="section-title"><span class="eyebrow">Terima kasih, ' + MBV.esc(o.name) + '</span><h1>Pesanan diterima</h1></div>' +
+        '<div class="summary wide"><p>Nomor pesanan<strong>' + MBV.esc(o.no) + '</strong></p>' +
+        o.lines.map(function (l) { return '<p>' + MBV.esc(l.title) + ' — ' + MBV.esc(l.artist) + ' ×' + l.qty + '<span>' + MBV.rp(l.total) + '</span></p>'; }).join('') +
+        '<p>' + MBV.esc(o.shipName) + '<span>' + MBV.rp(o.shipCost) + '</span></p><p class="grand">Total<span>' + MBV.rp(o.total) + '</span></p>' +
+        '<p class="note">Dikirim ke: ' + MBV.esc(o.address) + '</p><p class="note">' + how[o.pay] + '</p>' +
+        '<p class="note">Konfirmasi dikirim ke ' + MBV.esc(o.email) + '.</p></div>' +
+        '<p style="margin-top:24px"><a class="btn-vintage" href="catalog.html">Belanja lagi</a></p>';
+})();
+</script>
+</body></html>

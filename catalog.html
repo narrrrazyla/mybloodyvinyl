@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Katalog | My Bloody Vinyl</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=Inter:wght@400..700&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="in-frame" data-page="catalog.html">
+    <main class="page-body">
+        <div class="section-title">
+            <span class="eyebrow">Semua rilisan</span>
+            <h1>Katalog Produk Kami</h1>
+        </div>
+
+        <div class="toolbar">
+            <div class="chips" id="chips" role="group" aria-label="Filter genre"></div>
+            <label class="sort">Urutkan
+                <select id="sort">
+                    <option value="rekomendasi">Rekomendasi</option>
+                    <option value="harga-naik">Harga terendah</option>
+                    <option value="harga-turun">Harga tertinggi</option>
+                    <option value="tahun-baru">Rilis terbaru</option>
+                    <option value="tahun-lama">Rilis terlama</option>
+                    <option value="az">Judul A-Z</option>
+                </select>
+            </label>
+        </div>
+
+        <p class="result-count" id="count" aria-live="polite"></p>
+        <div class="product-container" id="grid"></div>
+    </main>
+
+    <script src="products.js"></script>
+    <script src="cart.js"></script>
+    <script>
+        (function () {
+            var state = { genre: 'Semua', sort: 'rekomendasi' };
+            var genres = ['Semua'].concat(MBV.genres());
+            var chips = document.getElementById('chips');
+            var grid = document.getElementById('grid');
+            var count = document.getElementById('count');
+            var sortEl = document.getElementById('sort');
+
+            var sorters = {
+                'harga-naik': function (a, b) { return a.price - b.price; },
+                'harga-turun': function (a, b) { return b.price - a.price; },
+                'tahun-baru': function (a, b) { return b.year - a.year; },
+                'tahun-lama': function (a, b) { return a.year - b.year; },
+                'az': function (a, b) { return a.title.localeCompare(b.title); }
+            };
+
+            function renderChips() {
+                chips.innerHTML = genres.map(function (g) {
+                    return '<button type="button" class="chip" data-genre="' + MBV.esc(g) + '" aria-pressed="' + (g === state.genre) + '">' + MBV.esc(g) + '</button>';
+                }).join('');
+            }
+
+            function render() {
+                var list = MBV.products.filter(function (p) {
+                    return state.genre === 'Semua' || p.genre === state.genre;
+                });
+                if (sorters[state.sort]) list = list.slice().sort(sorters[state.sort]);
+                count.textContent = 'Menampilkan ' + list.length + ' dari ' + MBV.products.length + ' album';
+                grid.innerHTML = list.map(function (p) { return MBV.card(p); }).join('');
+            }
+
+            chips.addEventListener('click', function (e) {
+                var btn = e.target.closest('[data-genre]');
+                if (!btn) return;
+                state.genre = btn.getAttribute('data-genre');
+                renderChips();
+                render();
+                chips.querySelector('[aria-pressed="true"]').focus();
+            });
+
+            sortEl.addEventListener('change', function () {
+                state.sort = sortEl.value;
+                render();
+            });
+
+            renderChips();
+            render();
+        })();
+    </script>
+</body>
+</html>

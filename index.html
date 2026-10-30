@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Bloody Vinyl | Toko Piringan Hitam Vintage</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=Inter:wght@400..700&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header>
+        <!-- Gambar banner dipasang lewat CSS (.header-banner) memakai file "header 1.jpg" -->
+        <div class="header-banner" aria-hidden="true"></div>
+        <div class="top-bar">
+            <p>EST. 1967 — PUSAT KOLEKSI PIRINGAN HITAM KLASIK &amp; LANGKA</p>
+        </div>
+        <nav class="navbar" aria-label="Navigasi utama">
+            <div class="logo">
+                <a href="index.html">My Bloody <span>Vinyl</span></a>
+            </div>
+            <ul class="nav-links">
+                <li><a href="home.html" target="content-frame" aria-current="page">Home</a></li>
+                <li><a href="bestseller.html" target="content-frame">Best Seller</a></li>
+                <li><a href="catalog.html" target="content-frame">Kategori / Katalog</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="cart.html" target="content-frame" class="cart-btn" aria-live="polite">Keranjang (0)</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="frame-container" id="main">
+        <iframe src="home.html" name="content-frame" title="Konten Website"></iframe>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-col">
+                <h3>My Bloody Vinyl</h3>
+                <p>Jl. Melawai Raya No. 45<br>Blok M, Jakarta Selatan</p>
+            </div>
+            <div class="footer-col">
+                <h3>Jam Operasional</h3>
+                <p>Selasa - Minggu: 13:00 - 21:00 WIB<br>Senin: Tutup</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 My Bloody Vinyl. Hak Cipta Dilindungi.</p>
+        </div>
+    </footer>
+
+    <script>
+        (function () {
+            var frame = document.querySelector('iframe[name="content-frame"]');
+            var main = document.getElementById('main');
+            var cartBtn = document.querySelector('.cart-btn');
+            var links = document.querySelectorAll('.nav-links a');
+            var firstPage = true;
+
+            // Halaman mana yang menyalakan menu mana
+            var section = {
+                'home.html': 'home.html',
+                'bestseller.html': 'bestseller.html',
+                'catalog.html': 'catalog.html',
+                'product.html': 'catalog.html'
+            };
+
+            function mark(page) {
+                var active = section[page] || '';
+                links.forEach(function (l) {
+                    if (l.getAttribute('href') === active) {
+                        l.setAttribute('aria-current', 'page');
+                    } else {
+                        l.removeAttribute('aria-current');
+                    }
+                });
+                var inCart = page === 'cart.html' || page === 'checkout.html' || page === 'order.html';
+                if (inCart) { cartBtn.setAttribute('aria-current', 'page'); } else { cartBtn.removeAttribute('aria-current'); }
+            }
+
+            // Pesan dari halaman di dalam iframe
+            window.addEventListener('message', function (e) {
+                if (e.source !== frame.contentWindow || !e.data) return;
+                var d = e.data;
+
+                if (d.type === 'mbv-cart') {
+                    cartBtn.textContent = 'Keranjang (' + d.count + ')';
+                }
+
+                if (d.type === 'mbv-height') {
+                    frame.style.height = Math.max(480, d.height) + 'px';
+                }
+
+                if (d.type === 'mbv-page') {
+                    mark(d.name);
+                    // Pindah halaman: kembali ke awal konten
+                    if (!firstPage && main.getBoundingClientRect().top < 0) {
+                        main.scrollIntoView();
+                    }
+                    firstPage = false;
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>

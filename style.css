@@ -1,0 +1,609 @@
+/* ==========================================================
+   My Bloody Vinyl — style.css
+   Arah desain: shoegaze berkabut. Gelap, burgundy, pink pudar,
+   tekstur grain, dan detail piringan hitam.
+   ========================================================== */
+
+:root {
+    /* Warna inti */
+    --bg-color: #121015;
+    --text-color: #f4f0ea;
+    --accent-color: #e0115f;
+    --accent-deep: #c40e52;      /* untuk latar tombol, kontras teks lebih baik */
+
+    /* Nuansa berkabut */
+    --haze-pink: #ffb6c1;
+    --muted-silver: #c0c0c0;
+    --dark-shadows: #1c1c1e;
+    --deep-burgundy: #4a0e17;
+    --ambient-glow: #ff8da1;
+
+    /* Turunan */
+    --line: rgba(244, 240, 234, 0.14);
+    --surface: #1a171d;
+
+    /* Font */
+    --font-heading: 'Playfair Display', Georgia, serif;
+    --font-sub: 'Special Elite', 'Courier New', monospace;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-accent: 'EB Garamond', 'Times New Roman', serif;
+
+    color-scheme: dark;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image:
+        radial-gradient(70% 50% at 85% 0%, rgba(255, 141, 161, 0.10), transparent 70%),
+        radial-gradient(60% 40% at 0% 100%, rgba(74, 14, 23, 0.55), transparent 70%),
+        url('bg1.png');
+    background-repeat: no-repeat, no-repeat, repeat;
+    color: var(--text-color);
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Grain halus di seluruh halaman */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0.06;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--haze-pink);
+    outline-offset: 3px;
+}
+
+/* ---------- Header & navigasi ---------- */
+header {
+    border-bottom: 1px solid var(--line);
+    background-color: var(--bg-color);
+}
+
+/* Banner: gambar "header 1.jpg" dipakai sebagai latar. Tanpa gambar, tampil kabut pink. */
+.header-banner {
+    height: clamp(110px, 18vw, 220px);
+    background-color: var(--deep-burgundy);
+    background-image:
+        radial-gradient(80% 140% at 20% 0%, rgba(255, 141, 161, 0.35), transparent 60%),
+        linear-gradient(180deg, rgba(18, 16, 21, 0.25) 0%, var(--bg-color) 100%),
+        url("header 1.jpg");
+    background-size: cover;
+    background-position: center;
+}
+
+.top-bar {
+    background-color: var(--deep-burgundy);
+    color: var(--text-color);
+    text-align: center;
+    font-family: var(--font-sub);
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 6px 16px;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.logo a {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    color: var(--text-color);
+}
+
+.logo span {
+    color: var(--accent-color);
+    font-style: italic;
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 30px;
+}
+
+.nav-links a {
+    display: inline-block;
+    padding: 6px 0;
+    border-bottom: 2px solid transparent;
+    text-decoration: none;
+    color: var(--muted-silver);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.nav-links a:hover,
+.nav-links a[aria-current="page"] {
+    color: var(--text-color);
+    border-bottom-color: var(--accent-color);
+}
+
+.cart-btn {
+    display: inline-block;
+    text-decoration: none;
+    background-color: var(--text-color);
+    color: var(--bg-color);
+    padding: 9px 16px;
+    font-size: 0.85rem;
+    font-family: var(--font-sub);
+    letter-spacing: 0.04em;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.cart-btn:hover {
+    background-color: var(--accent-deep);
+    color: var(--text-color);
+}
+
+/* ---------- Iframe ---------- */
+.frame-container {
+    width: 100%;
+}
+
+/* Tinggi iframe diatur oleh index.html mengikuti isi halaman */
+iframe {
+    display: block;
+    width: 100%;
+    height: 70vh;
+    min-height: 480px;
+    border: none;
+    background: transparent;
+}
+
+/* ---------- Halaman di dalam iframe ---------- */
+.page-body {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: clamp(24px, 5vw, 48px) clamp(16px, 4vw, 32px);
+}
+
+.section-title {
+    margin-bottom: 24px;
+}
+
+.eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    font-family: var(--font-sub);
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--haze-pink);
+}
+
+.section-title h1,
+.section-title h2 {
+    font-family: var(--font-heading);
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    line-height: 1.15;
+    text-wrap: balance;
+}
+
+/* Hero */
+.hero-iframe {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    min-height: 420px;
+    padding: 40px clamp(24px, 6vw, 80px);
+    background:
+        radial-gradient(60% 90% at 82% 45%, rgba(255, 141, 161, 0.30), transparent 70%),
+        radial-gradient(50% 70% at 5% 100%, rgba(224, 17, 95, 0.28), transparent 70%),
+        linear-gradient(160deg, #2b0c15 0%, var(--bg-color) 75%);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    color: var(--text-color);
+}
+
+/* Grain khusus hero */
+.hero-iframe::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.10;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Piringan hitam berputar pelan */
+.hero-iframe::after {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 50%;
+    right: clamp(-120px, -6vw, -40px);
+    width: clamp(260px, 56vh, 440px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle, var(--bg-color) 0 3%, var(--accent-color) 3.5% 16%, transparent 16.5%),
+        conic-gradient(from 20deg, transparent 0 8%, rgba(255, 255, 255, 0.14) 14%, transparent 22% 50%, rgba(255, 255, 255, 0.12) 64%, transparent 72%),
+        repeating-radial-gradient(circle, #0c0b0e 0 2px, #1a171c 3px 4px);
+    box-shadow: 0 0 90px rgba(224, 17, 95, 0.35);
+    transform: translateY(-50%);
+    animation: spin 28s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: translateY(-50%) rotate(0deg); }
+    to   { transform: translateY(-50%) rotate(360deg); }
+}
+
+.hero-content {
+    position: relative;
+    z-index: 1;
+    max-width: 34rem;
+}
+
+.hero-content h1 {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.1;
+    text-wrap: balance;
+    margin-bottom: 16px;
+}
+
+.hero-content h1 em {
+    color: var(--accent-color);
+}
+
+.hero-content p {
+    max-width: 34ch;
+    margin-bottom: 28px;
+    font-family: var(--font-accent);
+    font-size: 1.25rem;
+    line-height: 1.5;
+    color: var(--muted-silver);
+}
+
+.btn-vintage {
+    display: inline-block;
+    background-color: var(--accent-deep);
+    color: var(--text-color);
+    padding: 12px 28px;
+    text-decoration: none;
+    font-family: var(--font-sub);
+    font-size: 0.9rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    border: 1px solid var(--accent-color);
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-vintage:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 24px rgba(224, 17, 95, 0.45);
+}
+
+/* ---------- Produk ---------- */
+.product-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 20px;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 14px;
+    background: linear-gradient(180deg, var(--dark-shadows), #15121a);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(224, 17, 95, 0.6);
+    box-shadow: 0 10px 28px rgba(224, 17, 95, 0.18);
+}
+
+/* Foto produk */
+.product-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+/* Sampul pengganti sebelum foto asli dipasang */
+.cover {
+    --cover-bg: linear-gradient(150deg, #ffb6c1 0%, #8c1f3d 55%, #1c1c1e 100%);
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 1;
+    border-radius: 2px;
+    background: var(--cover-bg);
+}
+
+.cover::after {
+    content: "";
+    position: absolute;
+    right: -18%;
+    bottom: -18%;
+    width: 62%;
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: repeating-radial-gradient(circle, #0c0b0e 0 2px, #19161b 3px 4px);
+    box-shadow: -6px -6px 24px rgba(0, 0, 0, 0.5);
+}
+
+.cover.tone-2 { --cover-bg: linear-gradient(150deg, #c0c0c0 0%, #4b4a55 55%, #121015 100%); }
+.cover.tone-3 { --cover-bg: linear-gradient(150deg, #ff8da1 0%, #4a0e17 60%, #121015 100%); }
+.cover.tone-4 { --cover-bg: linear-gradient(150deg, #e8dfe4 0%, #7a2a44 50%, #1c1c1e 100%); }
+.cover.tone-5 { --cover-bg: linear-gradient(150deg, #b9a3c9 0%, #43264f 55%, #121015 100%); }
+.cover.tone-6 { --cover-bg: linear-gradient(150deg, #f0c9a8 0%, #6e2b2b 55%, #1c1c1e 100%); }
+
+/* Teks pada sampul pengganti (dipakai saat foto album belum ada) */
+.cover-artist,
+.cover-title {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    z-index: 1;
+    color: #fff;
+    text-shadow: 0 1px 12px rgba(0, 0, 0, 0.55);
+    text-wrap: balance;
+}
+
+.cover-artist {
+    top: 9%;
+    font-family: var(--font-sub);
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    opacity: 0.9;
+}
+
+.cover-title {
+    top: 21%;
+    font-family: var(--font-heading);
+    font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.12;
+}
+
+.product-card h3 {
+    font-family: var(--font-heading);
+    font-size: 1.05rem;
+    line-height: 1.25;
+    color: var(--text-color);
+}
+
+.product-card p {
+    font-size: 0.85rem;
+    color: var(--muted-silver);
+}
+
+.grade {
+    align-self: flex-start;
+    padding: 2px 8px;
+    font-family: var(--font-sub);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--haze-pink);
+    border: 1px solid rgba(255, 182, 193, 0.4);
+}
+
+.product-card .price {
+    margin-top: auto;
+    font-weight: 700;
+    font-size: 1.05rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--haze-pink);
+}
+
+.product-card button {
+    width: 100%;
+    padding: 10px 12px;
+    background: var(--accent-deep);
+    color: var(--text-color);
+    border: 1px solid var(--accent-color);
+    border-radius: 2px;
+    cursor: pointer;
+    font-family: var(--font-sub);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.product-card button:hover {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 18px rgba(224, 17, 95, 0.4);
+}
+
+/* ---------- Footer ---------- */
+.footer {
+    background-color: #0d0b0f;
+    border-top: 1px solid var(--deep-burgundy);
+    color: var(--muted-silver);
+    padding: 40px 20px 24px;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 28px 64px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-col h3 {
+    margin-bottom: 8px;
+    font-family: var(--font-heading);
+    font-size: 1.1rem;
+    color: var(--text-color);
+}
+
+.footer-col p {
+    font-size: 0.92rem;
+    line-height: 1.7;
+}
+
+.footer-bottom {
+    max-width: 1200px;
+    margin: 32px auto 0;
+    padding-top: 16px;
+    border-top: 1px solid var(--line);
+    text-align: center;
+    font-family: var(--font-sub);
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+}
+
+/* ---------- Layar kecil ---------- */
+@media (max-width: 720px) {
+    .navbar {
+        padding: 16px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px 12px;
+    }
+
+    .hero-iframe::after {
+        opacity: 0.3;
+    }
+}
+
+/* ---------- Kurangi gerakan ---------- */
+@media (prefers-reduced-motion: reduce) {
+    .hero-iframe::after {
+        animation: none;
+    }
+
+    * {
+        transition: none !important;
+    }
+}
+
+/* ==========================================================
+   Tambahan: katalog, detail produk, keranjang, checkout
+   ========================================================== */
+.cover-link { display: block; text-decoration: none; }
+.cover-link:focus-visible { outline: 2px solid var(--haze-pink); outline-offset: 3px; }
+.product-card h3 a { color: inherit; text-decoration: none; }
+.product-card h3 a:hover { color: var(--haze-pink); }
+.product-card { position: relative; }
+.product-card button:disabled, .btn-vintage:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+.rank { position: absolute; top: 22px; left: 22px; z-index: 2; padding: 2px 10px; background: var(--text-color); color: var(--bg-color); font-family: var(--font-heading); font-weight: 900; font-size: 1.1rem; }
+
+.toolbar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px 24px; margin-bottom: 16px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { padding: 6px 14px; background: transparent; color: var(--muted-silver); border: 1px solid var(--line); cursor: pointer; font-family: var(--font-sub); font-size: .82rem; }
+.chip:hover { color: var(--text-color); border-color: var(--haze-pink); }
+.chip[aria-pressed="true"] { background: var(--accent-deep); color: var(--text-color); border-color: var(--accent-color); }
+.sort { display: flex; align-items: center; gap: 10px; font-family: var(--font-sub); font-size: .85rem; color: var(--muted-silver); }
+select, input, textarea { font: inherit; color: var(--text-color); background: var(--surface); border: 1px solid var(--line); border-radius: 2px; padding: 8px 10px; }
+input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 2px solid var(--haze-pink); outline-offset: 2px; }
+.result-count { margin-bottom: 18px; font-size: .88rem; color: var(--muted-silver); }
+
+.crumbs { margin-bottom: 20px; font-size: .85rem; color: var(--muted-silver); }
+.crumbs a, .src, .link-btn { color: var(--haze-pink); }
+.detail { display: grid; grid-template-columns: minmax(240px, 420px) 1fr; gap: clamp(24px, 5vw, 56px); align-items: start; }
+.detail .cover, .detail img { box-shadow: 0 14px 40px rgba(0, 0, 0, .5); }
+.detail-info h1 { margin: 12px 0 4px; font-family: var(--font-heading); font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.1; }
+.artist { color: var(--muted-silver); }
+.detail-price { margin: 18px 0; font-size: 1.7rem; font-weight: 700; color: var(--haze-pink); font-variant-numeric: tabular-nums; }
+.detail-desc { max-width: 52ch; font-family: var(--font-accent); font-size: 1.2rem; line-height: 1.6; }
+.stock { margin: 16px 0 8px; font-size: .85rem; color: var(--muted-silver); }
+.buy { display: flex; flex-wrap: wrap; align-items: end; gap: 12px; }
+.buy label { display: grid; gap: 4px; font-family: var(--font-sub); font-size: .8rem; }
+.buy input { width: 80px; }
+.buy .btn-vintage { cursor: pointer; }
+.btn-ghost { display: inline-block; padding: 12px 24px; border: 1px solid var(--muted-silver); color: var(--text-color); text-decoration: none; font-family: var(--font-sub); font-size: .9rem; }
+.btn-ghost:hover { border-color: var(--haze-pink); color: var(--haze-pink); }
+.msg { min-height: 1.4em; margin-top: 10px; font-size: .88rem; color: var(--haze-pink); }
+.msg.err { color: #ff8a8a; }
+.src { display: inline-block; margin-top: 10px; font-size: .88rem; }
+.sub { margin: 48px 0 18px; font-family: var(--font-heading); font-size: 1.4rem; }
+
+.empty { padding: 48px 0; text-align: center; }
+.empty p { margin-bottom: 18px; font-family: var(--font-accent); font-size: 1.3rem; color: var(--muted-silver); }
+.cart-list { display: grid; gap: 12px; }
+.cart-line { display: grid; grid-template-columns: 84px 1fr auto auto; align-items: center; gap: 12px 20px; padding: 12px; background: var(--dark-shadows); border: 1px solid var(--line); }
+.cart-line .cover-artist, .cart-line .cover-title { display: none; }
+.cart-line h3 { font-family: var(--font-heading); font-size: 1.05rem; }
+.cart-line h3 a { color: inherit; text-decoration: none; }
+.cart-line p { font-size: .85rem; color: var(--muted-silver); }
+.link-btn { background: none; border: 0; padding: 0; cursor: pointer; font-size: .82rem; text-decoration: underline; }
+.stepper { display: flex; align-items: center; gap: 4px; }
+.stepper button { width: 32px; height: 32px; background: var(--surface); color: var(--text-color); border: 1px solid var(--line); cursor: pointer; }
+.stepper button:disabled { opacity: .4; cursor: not-allowed; }
+.stepper output { min-width: 32px; text-align: center; }
+.line-total { min-width: 110px; text-align: right; font-variant-numeric: tabular-nums; }
+
+.summary { padding: 20px; background: var(--dark-shadows); border: 1px solid var(--line); }
+.summary h2 { margin-bottom: 12px; font-family: var(--font-heading); font-size: 1.3rem; }
+.summary p { display: flex; justify-content: space-between; gap: 16px; padding: 6px 0; font-variant-numeric: tabular-nums; }
+.summary .grand { margin-top: 8px; padding-top: 12px; border-top: 1px solid var(--line); font-weight: 700; font-size: 1.15rem; color: var(--haze-pink); }
+.summary .note { display: block; font-size: .85rem; color: var(--muted-silver); }
+.summary .btn-vintage, .summary .link-btn { margin-top: 14px; }
+.cart-list + .summary { max-width: 380px; margin: 24px 0 0 auto; }
+.summary.wide { max-width: 560px; }
+
+.checkout { display: grid; grid-template-columns: 1fr minmax(260px, 340px); gap: clamp(20px, 4vw, 40px); align-items: start; }
+.checkout form { display: grid; gap: 20px; }
+fieldset { display: grid; gap: 12px; padding: 18px; border: 1px solid var(--line); }
+legend { padding: 0 8px; font-family: var(--font-heading); font-size: 1.1rem; }
+.field { display: grid; gap: 4px; font-size: .88rem; color: var(--muted-silver); }
+.row2 { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; }
+.opt { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border: 1px solid var(--line); cursor: pointer; }
+.opt span { margin-left: auto; color: var(--haze-pink); }
+.opt:has(input:checked) { border-color: var(--accent-color); background: rgba(224, 17, 95, .08); }
+.checkout .btn-vintage { cursor: pointer; justify-self: start; }
+
+@media (max-width: 720px) {
+    .detail, .checkout { grid-template-columns: 1fr; }
+    .cart-line { grid-template-columns: 72px 1fr; }
+    .line-total { text-align: left; }
+    .row2 { grid-template-columns: 1fr; }
+}

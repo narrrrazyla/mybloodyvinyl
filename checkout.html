@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout | My Bloody Vinyl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=Inter:wght@400..700&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="in-frame" data-page="checkout.html">
+<main class="page-body">
+<div class="section-title"><span class="eyebrow">Hampir selesai</span><h1>Checkout</h1></div>
+<div id="co"></div>
+</main>
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script>
+(function () {
+    var el = document.getElementById('co');
+    var ship = { jne: ['JNE Reguler', 20000], sicepat: ['SiCepat Halu', 18000], gojek: ['Gojek Instant (Jabodetabek)', 35000] };
+    if (!MBV.cart.count()) {
+        el.innerHTML = '<div class="empty"><p>Keranjang kosong, belum ada yang bisa di-checkout.</p><a class="btn-vintage" href="catalog.html">Lihat katalog</a></div>';
+        return;
+    }
+    function f(name, label, attrs, type) {
+        return '<label class="field">' + label + '<input name="' + name + '" type="' + (type || 'text') + '" ' + attrs + '></label>';
+    }
+    var opts = Object.keys(ship).map(function (k, i) {
+        return '<label class="opt"><input type="radio" name="ship" value="' + k + '"' + (i ? '' : ' checked') + '> ' + ship[k][0] + ' <span>' + MBV.rp(ship[k][1]) + '</span></label>';
+    }).join('');
+    var pays = [['transfer', 'Transfer bank (BCA / Mandiri)'], ['qris', 'QRIS'], ['cod', 'Bayar di tempat (khusus Jabodetabek)']].map(function (x, i) {
+        return '<label class="opt"><input type="radio" name="pay" value="' + x[0] + '"' + (i ? '' : ' checked') + '> ' + x[1] + '</label>';
+    }).join('');
+    el.innerHTML = '<div class="checkout"><form id="form" novalidate>' +
+        '<fieldset><legend>Data penerima</legend>' +
+        f('name', 'Nama lengkap', 'required autocomplete="name"') +
+        f('email', 'Email', 'required autocomplete="email"', 'email') +
+        f('phone', 'No. WhatsApp', 'required inputmode="tel" autocomplete="tel" placeholder="08xxxxxxxxxx"', 'tel') + '</fieldset>' +
+        '<fieldset><legend>Alamat pengiriman</legend>' +
+        '<label class="field">Alamat lengkap<textarea name="address" rows="3" required autocomplete="street-address"></textarea></label>' +
+        '<div class="row2">' + f('city', 'Kota / Kabupaten', 'required autocomplete="address-level2"') + f('zip', 'Kode pos', 'required inputmode="numeric" maxlength="5" autocomplete="postal-code"') + '</div>' +
+        '<label class="field">Catatan (opsional)<input name="note" type="text"></label></fieldset>' +
+        '<fieldset><legend>Pengiriman</legend>' + opts + '</fieldset>' +
+        '<fieldset><legend>Pembayaran</legend>' + pays + '</fieldset>' +
+        '<p class="msg err" id="err" role="alert"></p>' +
+        '<button type="submit" class="btn-vintage">Buat pesanan</button></form>' +
+        '<aside class="summary" id="sum"></aside></div>';
+    var form = document.getElementById('form'), sum = document.getElementById('sum'), err = document.getElementById('err');
+    function shipCost() { return ship[form.ship.value][1]; }
+    function drawSum() {
+        sum.innerHTML = '<h2>Ringkasan</h2>' + MBV.cart.lines().map(function (l) {
+            return '<p>' + MBV.esc(l.product.title) + ' ×' + l.qty + '<span>' + MBV.rp(l.total) + '</span></p>';
+        }).join('') + '<p>Subtotal<span>' + MBV.rp(MBV.cart.subtotal()) + '</span></p><p>Ongkir<span>' + MBV.rp(shipCost()) + '</span></p>' +
+            '<p class="grand">Total<span>' + MBV.rp(MBV.cart.subtotal() + shipCost()) + '</span></p><a class="link-btn" href="cart.html">Ubah keranjang</a>';
+    }
+    form.addEventListener('change', drawSum);
+    drawSum();
+    form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        var d = form, bad = null;
+        [['name', d.name.value.trim().length >= 3, 'Isi nama lengkap (minimal 3 huruf).'],
+         ['email', /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(d.email.value), 'Format email belum benar.'],
+         ['phone', /^(\+62|62|0)8\d{7,12}$/.test(d.phone.value.replace(/[\s-]/g, '')), 'Nomor harus diawali 08 atau +628.'],
+         ['address', d.address.value.trim().length >= 10, 'Tulis alamat selengkapnya (jalan, nomor, RT/RW).'],
+         ['city', d.city.value.trim().length >= 3, 'Isi kota atau kabupaten.'],
+         ['zip', /^\d{5}$/.test(d.zip.value), 'Kode pos terdiri dari 5 angka.']
+        ].some(function (r) { if (!r[1]) { bad = r; return true; } });
+        if (bad) { err.textContent = bad[2]; form[bad[0]].focus(); return; }
+        var no = 'MBV-' + Date.now().toString(36).toUpperCase();
+        MBV.store.set('mbv-order', {
+            no: no, lines: MBV.cart.lines().map(function (l) { return { title: l.product.title, artist: l.product.artist, qty: l.qty, total: l.total }; }),
+            subtotal: MBV.cart.subtotal(), shipName: ship[d.ship.value][0], shipCost: shipCost(), total: MBV.cart.subtotal() + shipCost(),
+            pay: d.pay.value, name: d.name.value.trim(), email: d.email.value.trim(), phone: d.phone.value.trim(),
+            address: d.address.value.trim() + ', ' + d.city.value.trim() + ' ' + d.zip.value
+        });
+        MBV.cart.clear();
+        location.href = 'order.html';
+    });
+})();
+</script>
+</body></html>

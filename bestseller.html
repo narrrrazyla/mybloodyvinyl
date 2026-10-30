@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Best Seller | My Bloody Vinyl</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Special+Elite&family=Inter:wght@400..700&family=EB+Garamond:ital,wght@0,400..600;1,400..600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="in-frame" data-page="bestseller.html">
+<main class="page-body">
+<div class="section-title"><span class="eyebrow">Paling banyak dicari</span><h1>Best Seller</h1></div>
+<div class="product-container" id="grid"></div>
+</main>
+<script src="products.js"></script>
+<script src="cart.js"></script>
+<script>
+document.getElementById('grid').innerHTML = MBV.products.slice().sort(function (a, b) { return b.sold - a.sold; })
+    .slice(0, 6).map(function (p, i) { return MBV.card(p, i + 1); }).join('');
+</script>
+</body></html>
